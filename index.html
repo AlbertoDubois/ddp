@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Developing Data Products Project</title>
+	<meta name="description" content="Developing Data Products Project">
+	<meta name="author" content="">
+	<meta name="generator" content="slidify" />
+	
+	<!-- LOAD STYLE SHEETS -->
+	<link rel="stylesheet" href="libraries/frameworks/html5slides/default/styles.css">
+	<link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />  <link rel="stylesheet" href = "assets/css/ribbons.css">
+  
+</head>
+<body style='display: none'>
+	<section class='slides layout-regular template-regular'>
+     <article class="" id="slide-1" style="background:;">
+  <h3>Introduction to the project</h3>
+  <p>In this project we are going to predict the species of a flower with its Sepal and Petal characteristics. Our model will consist of a classification tree trained with the data available in RStudio. </p>
+
+<p>I have chosen to build a classification tree due to its interpretability. It might not be the best model but it has a better user interface because it allows the users to see how he has to play with the sliders in a more straightforward way.</p>
+
+<p>This presentation is structured as:</p>
+
+<ol>
+<li>Data Analysis</li>
+<li>Interpretation of the results</li>
+<li>Usability</li>
+</ol>
+
+</article>
+
+<article class="" id="bg:yellow" style="background:;">
+  <h3>Data analysis</h3>
+  <p>First of all we need to load the &quot;iris&quot; package from RStudio. We have 150 observations of different flowers with only three species: setosa, versicolor and virginica.
+We can assume that all variables are significant so we will use all of the data to fit the model. The steps are the following:</p>
+
+<ol>
+<li>Load the data</li>
+<li>Split the data into train and test. We want to avoid overfitting. Testing I saw that if I use all the data for training the classification tree predicts the species as the baselines, so it doesn&#39;t add any value to the app.</li>
+<li>Build the Classification tree</li>
+<li>Create the test dataframe</li>
+<li>Predict the species</li>
+<li>Plot the classification tree</li>
+</ol>
+
+</article>
+
+<article class="" id="slide-3" style="background:yellow;">
+  <h3>Data analysis cont.</h3>
+  <p>This is the code runned:</p>
+
+<pre><code class="r">#Load the data
+data=iris
+
+# Randomly split the data into training and testing sets
+set.seed(1000)
+split = sample.split(data$Species, SplitRatio = 0.65)
+
+# Split up the data using subset
+train = subset(data, split==TRUE)
+test = subset(data, split==FALSE)
+
+# Regression Tree
+model = rpart(Species ~ ., method=&quot;class&quot;, data = train)
+
+#Create test dataframe
+test = data.frame(Sepal.Length=2,Sepal.Width=2,Petal.Length=2,Petal.Width=2)
+
+#Predict
+prediction = predict(model, newdata = test, type = &quot;class&quot;)
+prediction
+</code></pre>
+
+<pre><code>##      1 
+## setosa 
+## Levels: setosa versicolor virginica
+</code></pre>
+
+</article>
+
+<article class="" id="slide-4" style="background:lightgrey;">
+  <h3>Interpreting results</h3>
+  <p>The Classification Tree obtained is:</p>
+
+<pre><code class="r">fancyRpartPlot(model)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-2.png" alt="plot of chunk unnamed-chunk-2"> </p>
+
+<p>As we can see, the two significant variables determined by the algortihm are Petal.Length and Petal.Width. The user can check this by changing the slider of the other two variables and seeing that the prediction does not change. This model is very simple and can be improved by cross-validation, using random forests, etc.</p>
+
+</article>
+
+<article class="" id="slide-5" style="background:;">
+  <h3>Usability</h3>
+  <p>The user can change the charcteristics of the flower through the sliders at the top left corner. The min and max value of each slider is obtained from the original data, so we dont make any extrapolation.</p>
+
+<p>The value predicted is shown under &quot;Prediction of the species&quot; and the flower selected by the user under the field &quot;Value of the parameters&quot;. Finally, so the user understands how the model works it is shown the classification tree. This model doesnt depend on the flower selected by the user, so it is fixed.</p>
+
+<p>It is then a very user friendly shiny app and can be useful for flower lovers or students who want to check how a classification tree works.</p>
+
+</article>
+
+  </section>
+</body>
+  <!-- LOAD JAVASCRIPTS  -->
+	<script src='libraries/frameworks/html5slides/default/slides.js'></script>
+	<!-- LOAD HIGHLIGHTER JS FILES -->
+	<script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<!-- DONE LOADING HIGHLIGHTER JS FILES -->
+	 
+	</html>
